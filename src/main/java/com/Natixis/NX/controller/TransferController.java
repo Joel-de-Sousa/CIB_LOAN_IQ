@@ -4,7 +4,10 @@ import com.Natixis.NX.entities.Transfer;
 import com.Natixis.NX.repository.TransferRepository;
 import com.Natixis.NX.service.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,39 +22,83 @@ public class TransferController {
     @Autowired
     private TransferRepository repository;
 
+    private final String HOME = "pagina-inicial";
+
     public TransferController(TransferService service) {
         this.service = service;
     }
 
-    @GetMapping("/transfers")
-    List<Transfer> all() {
-        return service.listAll();
+    /**
+     * Home request and shows all the current transfers stored in the DB
+     * @return
+     */
+    @GetMapping("/")
+    public String home(Model model){
+        List<Transfer> transfers = service.listAll();
+        model.addAttribute("transfers", transfers);
+        return HOME;}
+
+    /**
+     * This requests points to a new html page to create a new transfer
+     * @param model
+     * @return
+     */
+    @GetMapping("/createTransfer")
+    public String createTransfer(Model model){
+        model.addAttribute("transfer", new Transfer());
+        return "new-transfer";
     }
 
+    /**
+     * This requests saves the new transfer and direct to home page
+     * @param transfer
+     * @return
+     */
     @PostMapping("/saveTransfer")
-    public void newTransfer(@RequestBody Transfer newTransfer) {
-        service.save(newTransfer);
+    public String saveTransfer(@ModelAttribute Transfer transfer, Model model) throws Exception {
+        try {
+            double bankFee = transfer.calculateTransferFee(transfer.getTransferDate(), transfer.getAmount());
+            transfer.setBankFee(bankFee);
+            service.save(transfer);
+            return "redirect:/";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "new-transfer";
+        }
     }
 
-
-    @GetMapping("/transfer/{id}")
-    public Transfer findTransfer(@PathVariable Long id) {
-        return service.findById(id);
+    /**
+     * This requests takes you to the edit page with the ID from the table form
+     * @param model
+     * @param id
+     * @return
+     */
+    @GetMapping("/editTransfer/{id}")
+    public String editTransfer(Model model, @PathVariable Long id) {
+        Transfer byId = service.editById(id);
+        model.addAttribute("transfer", byId);
+        return "edit-transfer";
     }
 
-    @PutMapping("/transfer/{id}")
-    public Optional<Transfer> editTransfer(@RequestBody Transfer newTransfer, @PathVariable Long id) {
-
-        return repository.findById(id)
-                .map(transfer -> {
-                    transfer.setAmount(newTransfer.getAmount());
-                    transfer.setTransferDate(newTransfer.getTransferDate());
-                    return repository.save(transfer);
-                });
+    /**
+     * This method saves the edit to the repository
+     * @param transfer
+     * @return
+     */
+    @PostMapping("/editTransfer")
+    public String saveEditTransfer(@ModelAttribute Transfer transfer) {
+        service.edit(transfer);
+        return "redirect:/";
     }
 
-    @DeleteMapping("/transfer/{id}")
-    public void deleteTransfer(@PathVariable Long id) {
+    /**
+     * This requests deletes a transfer from the table form
+     * @param id
+     * @return
+     */
+    @GetMapping("/deleteTransfer/{id}")
+    public String deleteTransfer(@PathVariable Long id) {
         service.delete(id);
+        return "redirect:/";
     }
 }

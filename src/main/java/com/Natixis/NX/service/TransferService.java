@@ -29,4 +29,14 @@ public class TransferService {
         transferRepository.save(transfer);
     }
 
+    public void edit(Transfer transfer){
+        transferRepository.save(transfer);
+    }
+
+    public Transfer editById(Long id){
+        Transfer transfer = transferRepository.findById(id).get();
+        transferRepository.delete(transfer);
+        return transfer;
+    }
+
 }
