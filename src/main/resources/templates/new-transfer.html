@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Transfer</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<form method="post" action="/saveTransfer" th:object="${transfer}">
+    <label for="dateInput">Date of Transfer:</label>
+    <input type="date" id="dateInput" name="date" th:field="*{transferDate}" required/>
+    <span th:if="${#fields.hasErrors('transferDate')}" th:errors="*{transferDate}"></span>
+    <br/>
+
+    <label for="numberInput">Amount:</label>
+    <input type="number" id="numberInput" name="amount" th:field="*{amount}" required/>
+    <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+    <br/>
+    <button type="submit">Submit</button>
+</form>
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+<h1>Natixis Bank Transfers</h1>
+<div id="error-alert" style="color: red;"></div>
+<a href="/createTransfer">Create a new transfer</a>
+<table id="transfers-table">
+    <thead>
+    <tr>
+        <th>Transfer Unique ID</th>
+        <th>Date of Transfer</th>
+        <th>Transfer Amount</th>
+        <th>Bank Commission</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="transfer : ${transfers}">
+        <td th:text="${transfer.id}"></td>
+        <td th:text="${transfer.transferDate}"></td>
+        <td th:text="${transfer.amount}"></td>
+        <td th:text="${transfer.bankFee}"></td>
+        <td><button><a th:href="@{|/editTransfer/${transfer.id}|}">Edit</a></button></td>
+        <td><button><a th:href="@{|/deleteTransfer/${transfer.id}|}">Delete</a></button></td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+
