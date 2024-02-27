@@ -1,13 +1,14 @@
 package com.Natixis.NX.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -20,11 +21,28 @@ import java.time.temporal.ChronoUnit;
 public class Transfer {
 
     @Id
-    private Long transferId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false,length = 3)
+    private Long id;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate transferDate;
-    //private Date dateOfOperation;
+    @Max(value = 1000000, message = "Max amount possible: 1.000.000")
+    @Min(value = 1, message = "Min amount possible: 1")
     private double amount;
+    private double bankFee;
 
+    /**
+     * Constructor to set the bank fee to asked parameters
+     * @param transferDate
+     * @param amount
+     * @throws Exception
+     */
+
+    public Transfer(LocalDate transferDate, double amount) throws Exception {
+        this.transferDate = transferDate;
+        this.amount = amount;
+        this.bankFee = calculateTransferFee(transferDate, amount);
+    }
 
     /**
      * Para cada transação, uma taxa de transferencia deve ser cobrada da seguinte forma:
@@ -50,7 +68,7 @@ public class Transfer {
         else if((amount > 1001 && amount <= 2000) && (daysBetween >= 1 && daysBetween <= 10) ) {
             return ((amount * 0.09));
         }
-        throw new Exception();
+        throw new Exception("Unsupported combination of amount and transfer date");
     }
 
 
