@@ -13,30 +13,56 @@ public class TransferService {
     @Autowired
     TransferRepository transferRepository;
 
+    /**
+     * Lists all the transfers
+     * @return
+     */
     public List<Transfer> listAll(){
         return transferRepository.findAll();
     }
 
+    /**
+     * Finds transfer by ID
+     * @param id
+     * @return
+     */
     public Transfer findById(Long id){
         return transferRepository.findById(id).get();
     }
 
+    /**
+     * Deletes a transfer by their ID
+     * @param id
+     */
     public void delete(Long id){
         transferRepository.deleteById(id);
     }
 
-    public void save(Transfer transfer){
+    /**
+     * Saves a new or edited instance of transfer
+     * @param transfer
+     */
+    public void save(Transfer transfer) {
+        try{
+        double bankFee = transfer.calculateTransferFee(transfer.getTransferDate(), transfer.getAmount());
+        transfer.setBankFee(bankFee);
         transferRepository.save(transfer);
+    } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public void edit(Transfer transfer){
-        transferRepository.save(transfer);
-    }
-
-    public Transfer editById(Long id){
-        Transfer transfer = transferRepository.findById(id).get();
-        transferRepository.delete(transfer);
-        return transfer;
+    /**
+     * Finds, edits and saves a new instance of transfer
+     * @param id
+     * @return
+     */
+    public Transfer editById(Long id, Transfer transfer){
+        Transfer t1 = transferRepository.findById(id).get();
+        t1.setAmount(transfer.getAmount());
+        t1.setTransferDate(transfer.getTransferDate());
+        save(t1);
+        return t1;
     }
 
 }

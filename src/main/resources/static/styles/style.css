@@ -1,0 +1,104 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #D7CFDD; /* Light background color */
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #78578F; /* Dark Purple */
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+a {
+    color: #78578F; /* Dark Purple for links */
+    text-decoration: none;
+    padding: 8px 16px;
+    background-color: #A98DBB; /* Light Purple */
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+a:hover {
+    background-color: #78578F; /* Dark Purple on hover */
+}
+
+table {
+    width: 60%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #A98DBB; /* Light Purple for borders */
+}
+
+th {
+    background-color: #382C3F; /* Darker Purple */
+    color: white;
+}
+
+button {
+    margin: 10px;
+    padding: 8px 16px;
+    background-color: #78578F; /* Dark Purple */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #A98DBB; /* Light Purple on hover */
+}
+
+#error-alert {
+    margin-bottom: 10px;
+    color: #D7CFDD; /* Light Purple for error alerts */
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input, button {
+    margin-bottom: 10px;
+}
+
+input[type="date"],
+input[type="number"] {
+    padding: 8px;
+    width: 100%;
+}
+
+/* Center the submit button */
+button[type="submit"] {
+    margin: 10px auto;
+    display: block;
+}
+
+/* Change the background color of edit and delete buttons */
+button.edit-button,
+button.delete-button {
+    background-color: #E67E22; /* Carrot Orange */
+}
