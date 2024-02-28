@@ -75,8 +75,8 @@ public class TransferController {
      */
     @GetMapping("/editTransfer/{id}")
     public String editTransfer(Model model, @PathVariable Long id) {
-        Transfer byId = service.editById(id);
-        model.addAttribute("transfer", byId);
+        Transfer findById = service.findById(id);
+        model.addAttribute("editTransfer", findById);
         return "edit-transfer";
     }
 
@@ -85,10 +85,19 @@ public class TransferController {
      * @param transfer
      * @return
      */
-    @PostMapping("/editTransfer")
-    public String saveEditTransfer(@ModelAttribute Transfer transfer) {
-        service.edit(transfer);
+    @PostMapping("/saveEditTransfer")
+    public String saveEditTransfer(@ModelAttribute Transfer transfer, Model model) throws Exception {
+        try{
+            Transfer t1 =service.findById(transfer.getId());
+            t1.setAmount(transfer.getAmount());
+            t1.setTransferDate(transfer.getTransferDate());
+            service.save(t1);
         return "redirect:/";
+    } catch (Exception e) {
+        model.addAttribute("error", e.getMessage());
+            model.addAttribute("editTransfer", transfer);
+        return "edit-transfer";
+        }
     }
 
     /**

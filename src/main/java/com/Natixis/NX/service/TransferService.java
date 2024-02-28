@@ -42,27 +42,14 @@ public class TransferService {
      * Saves a new or edited instance of transfer
      * @param transfer
      */
-    public void save(Transfer transfer) {
+    public void save(Transfer transfer) throws Exception{
         try{
         double bankFee = transfer.calculateTransferFee(transfer.getTransferDate(), transfer.getAmount());
         transfer.setBankFee(bankFee);
         transferRepository.save(transfer);
     } catch (Exception e){
             e.printStackTrace();
+            throw new Exception(e.getMessage());
         }
     }
-
-    /**
-     * Finds, edits and saves a new instance of transfer
-     * @param id
-     * @return
-     */
-    public Transfer editById(Long id, Transfer transfer){
-        Transfer t1 = transferRepository.findById(id).get();
-        t1.setAmount(transfer.getAmount());
-        t1.setTransferDate(transfer.getTransferDate());
-        save(t1);
-        return t1;
-    }
-
 }

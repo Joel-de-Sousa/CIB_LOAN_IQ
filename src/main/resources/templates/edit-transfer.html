@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Transfer</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
-<form method="post" th:action="@{editTransfer}" th:object="${transfer}">
+<form method="post" th:action="@{/saveEditTransfer}" th:object="${editTransfer}">
+    <input type="hidden" name="id" th:field="*{id}" />
     <label for="dateInput">Date of Transfer:</label>
-    <input type="date" id="dateInput" name="date" th:value="${transfer.transferDate}" required/>
+    <input type="date" id="dateInput" name="date" th:field="*{transferDate}" required/>
     <br/>
 
     <label for="numberInput">Amount:</label>
-    <input type="number" id="numberInput" name="number" th:vale="${transfer.amount}" required/>
+    <input type="number" id="numberInput" name="number" th:field="*{amount}" required/>
     <br/>
     <button type="submit">Edit</button>
 </form>
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
 </body>
 </html>
